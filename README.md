@@ -9,7 +9,7 @@ But the package is intended to be usable in its own right, without the Iris cont
 ## Principles
 For the time being, at least, **cfpint** should ... 
 
-* provide convenient handling of CF compatible units ***as*** pint Units.
+* provide convenient handling of CF compatible units ***as*** pint [Unit](https://pint.readthedocs.io/en/stable/api/base.html#pint.Unit)s.
 * provide solutions matching "at least most of" the functions of cf-units
 * support conversion of pint units to and from CF-compatible strings
 * **not** replicate all of cf-units, or its API
