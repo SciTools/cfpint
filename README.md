@@ -7,21 +7,21 @@ Specifically, we would eventually like to replace the existing [cf-units](https:
 But the package is intended to be usable in its own right, without the Iris context defining it.
 
 ## Principles
-For the time being, at least, cfpint should ... 
+For the time being, at least, **cfpint** should ... 
 
 * provide convenient handling of CF compatible units ***as*** pint Units.
 * provide solutions matching "at least most of" the functions of cf-units
 * support conversion of pint units to and from CF-compatible strings
 * **not** replicate all of cf-units, or its API
 
-Meanwhile, Iris should ...
+Meanwhile, **Iris** should ...
 
 * initially support *both/either* cf_units and cfpint units
     * ... but will eventually remove cf-units compatibility
 * preserve (most) existing behaviours and operations
     * ... but units of results may differ in detail
 * expose (cf)pint units transparently as units of its objects
-* support conversion between cfpint, cf_units and CF-compatible strings
+* support inter-conversion between cfpint, cf-units and CF-compatible strings
 * allow users to use pint operations (familiar, powerful), and not obscure them
 * support conversion of existing user code to use pint-based units
 
