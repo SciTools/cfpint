@@ -12,7 +12,11 @@ from ._cfarray_units_like import make_registry
 
 # Setup our own classes
 class Unit(pint.Unit):
-    pass
+    def __eq__(self, other):
+        if not isinstance(other, Unit):
+            other = Unit(other)
+        result = str(self) == str(other)
+        return result
 
 
 # See: https://pint.readthedocs.io/en/stable/advanced/custom-registry-class.html#custom-quantity-and-unit-class
