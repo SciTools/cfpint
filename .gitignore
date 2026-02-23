@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# setuptools-scm version control
+src/cfpint/_version.py
+
+# Packages
+.Python
+build
+develop-eggs
+dist
+eggs
+.eggs
+parts
+sdist
+var
+*.egg-info
+.installed.cfg
+*.egg
+MANIFEST
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Eclipse / PyCharm / PyDev
+/.idea
+*.cover
+.project
+.pydevproject
+.settings
+
+# Docs
+docs/_build
+docs/api
+docs/details/api
