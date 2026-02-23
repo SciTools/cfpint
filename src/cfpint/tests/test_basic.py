@@ -93,3 +93,46 @@ class TestCompares:
         assert type(m2) is pint.Unit
         assert m1 == m2
         assert m2 == m1
+
+
+class TestDates:
+    @pytest.mark.parametrize("calendar", [None, "default", "365_day"])
+    def test_date(self, calendar):
+        kwargs = {} if calendar is None else {"calendar": calendar}
+        date_unit = Unit("days since 1970-01-01", **kwargs)
+        assert (date_unit * 1).units == "days"
+        assert date_unit.startdate_string == "1970-01-01"
+        expect_calendar = "default" if calendar is None else calendar
+        assert date_unit.calendar_string == expect_calendar
+
+    @pytest.mark.parametrize("unitstr", ["m", "days", "hours since 1970"])
+    def test_is_datelike(self, unitstr):
+        unit = Unit(unitstr)
+        assert unit.is_datelike() == (" since " in unitstr)
+
+    @pytest.mark.parametrize(
+        "other",
+        ["days since 1970", "days since 1900"],
+    )
+    def test_date_difference(self, other):
+        m1 = Unit("hours since 1970")
+        diff = (1.0 * m1) - (1.0 * Unit(other))
+        diff_units = diff.units
+        assert isinstance(diff_units, Unit)
+        assert diff_units == "hours"
+        assert not diff_units.is_datelike()
+
+    @pytest.mark.parametrize("method", ["str", "repr"])
+    @pytest.mark.parametrize("calendar", [None, "default", "365_day"])
+    def test_str_repr(self, calendar, method):
+        kwargs = {} if calendar is None else {"calendar": calendar}
+        date_unit = Unit("day since 1970", **kwargs)
+        expect = "day since 1970"
+        if calendar == "365_day":
+            expect += ", calendar='365_day'"
+        if method == "str":
+            result = str(date_unit)
+        else:
+            expect = f"<Unit('{expect}')>"
+            result = repr(date_unit)
+        assert result == expect
