@@ -18,17 +18,18 @@ from packaging.version import Version
 
 # from .utils import emit_user_level_warning
 
+
 #
 # **Also** stolen from cf-xarray, to support below code,
 #
 def emit_user_level_warning(message, category=None):
-    """Emit a warning."""  #... at the user level by inspecting the stack trace.
+    """Emit a warning."""  # ... at the user level by inspecting the stack trace.
     # Here, just an emasculated version that **doesn't** fix the stack-level.
     # stacklevel = find_stack_level()
-    warnings.warn(message, category=category) #, stacklevel=stacklevel)
+    warnings.warn(message, category=category)  # , stacklevel=stacklevel)
 
 
-@pint.register_unit_format("cf")
+@pint.register_unit_format("CF")
 def short_formatter(unit, registry, **options):
     """Return a CF-compliant unit string from a `pint` unit.
 
@@ -131,6 +132,7 @@ def make_registry(basetype) -> pint.UnitRegistry:
     units.define("practical_salinity_unit = [] = psu = PSU")
 
     return units
+
 
 # # Enable pint's built-in matplotlib support
 # try:
