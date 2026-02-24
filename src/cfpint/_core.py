@@ -28,11 +28,12 @@ class Unit(pint.Unit):
                 #  : cf-units makes only token efforts to check for suitable content,
                 #  like expecting digits.
                 #  And *no* attempt to normalise the date formatting.
+                # TODO: validate this + normalise the formatting.
                 startdate_str = arg[index + len(self._DATEUNITS_SIGNATURE) :]
                 # NOTE: likewise, we don't really check calendar
                 #  N.B. cf_units (1) checks against a list of valid names, and (2)
                 #  normalises through a mapping of aliases.
-                # TODO: add some minimal checking of data+calendar, ~like cf_units
+                # TODO: add minimal checking of date+calendar, like cf_units or better
                 calendar_str = kwargs.pop("calendar", "default")
                 # Replace args[0]
                 args = [base_unit] + list(args[1:])
@@ -62,7 +63,7 @@ class Unit(pint.Unit):
 
         Pint Units do not support this, but cf_units did.
         """
-        if not isinstance(other, Unit):
+        if not isinstance(other, pint.Unit):
             other = Unit(other)
         # plain string comparison works, because Pint does *not* "store" the original
         #  definition string (unlike udunits / cf_units).
@@ -94,7 +95,9 @@ class CfpintRegistry(pint.registry.UnitRegistry):
 
 
 # Create our own registry, based on our own UnitRegistry subclass
-REGISTRY: CfpintRegistry = make_registry(CfpintRegistry)
+REGISTRY: CfpintRegistry = make_registry(
+    CfpintRegistry
+)  # include all 'normal' features
 
 # FOR NOW: failed to make selective installation work.
 # TODO: work out why and make "selectable" in future ??
@@ -104,5 +107,6 @@ REGISTRY: CfpintRegistry = make_registry(CfpintRegistry)
 #     pint.set_application_registry(REGISTRY)
 #
 # FOR NOW: just do it.
-REGISTRY.formatter.default_format = "CF"
 pint.set_application_registry(REGISTRY)
+pint.application_registry.default_system = "SI"
+pint.application_registry.default_format = "cfu"

@@ -15,15 +15,15 @@ class TestBasicCflike:
 
     def test_non_cf(self):
         m = Unit("m")
-        assert str(m) == "meter"
+        assert str(m) == "m"
 
     def test_cflike_product(self):
         m = Unit("m.s-1")
-        assert str(m) == "meter/second"
+        assert str(m) == "m s-1"
 
     def test_cflike_exponent(self):
         m = Unit("kg.s-2")
-        assert str(m) == "kilogram/second**2"
+        assert str(m) == "kg s-2"
 
     @pytest.mark.parametrize(
         "expr",
@@ -44,7 +44,7 @@ class TestBasicCflike:
     def test_cflike_multistyle(self, expr):
         """Test that a bunch of different styles all mean the same thing."""
         ms = Unit(expr)
-        assert str(ms) == "meter/second**2"
+        assert str(ms) == "m s-2"
 
     def test_pintlike_properties(self):
         ms = Unit("m.s-2")
@@ -116,8 +116,9 @@ class TestDates:
     )
     def test_date_difference(self, other):
         m1 = Unit("hours since 1970")
-        diff = (1.0 * m1) - (1.0 * Unit(other))
-        diff_units = diff.units
+        # TODO: is this what we now need to do for "Unit arithmetic"?
+        # i.e. we need to make Quantities
+        diff_units = ((1.0 * m1) - (1.0 * Unit(other))).units
         assert isinstance(diff_units, Unit)
         assert diff_units == "hours"
         assert not diff_units.is_datelike()
@@ -127,7 +128,8 @@ class TestDates:
     def test_str_repr(self, calendar, method):
         kwargs = {} if calendar is None else {"calendar": calendar}
         date_unit = Unit("day since 1970", **kwargs)
-        expect = "day since 1970"
+        # TODO: fix this (d//days), but for now it is done in Iris ???
+        expect = "d since 1970"
         if calendar == "365_day":
             expect += ", calendar='365_day'"
         if method == "str":

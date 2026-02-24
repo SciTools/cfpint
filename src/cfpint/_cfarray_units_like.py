@@ -29,7 +29,7 @@ def emit_user_level_warning(message, category=None):
     warnings.warn(message, category=category)  # , stacklevel=stacklevel)
 
 
-@pint.register_unit_format("CF")
+@pint.register_unit_format("cfu")
 def short_formatter(unit, registry, **options):
     """Return a CF-compliant unit string from a `pint` unit.
 
@@ -80,7 +80,7 @@ def short_formatter(unit, registry, **options):
 # Reused with modification from MetPy under the terms of the BSD 3-Clause License.
 # Copyright (c) 2015,2017,2019 MetPy Developers.
 # Create registry, with preprocessors for UDUNITS-style powers (m2 s-2) and percent signs
-def make_registry(basetype) -> pint.UnitRegistry:
+def make_registry(basetype, **kwargs) -> pint.UnitRegistry:
     units: pint.UnitRegistry = basetype(
         autoconvert_offset_to_baseunit=True,
         preprocessors=[
@@ -93,6 +93,7 @@ def make_registry(basetype) -> pint.UnitRegistry:
             lambda string: string.replace("%", "percent"),
         ],
         force_ndarray_like=True,
+        **kwargs
     )
     # ----- end block copied from metpy
 
