@@ -1,5 +1,6 @@
 import pint
 import pytest
+from cf_units import Unit as CFU_Unit
 
 # from cfpint import install_defaults
 from cfpint import Unit
@@ -91,6 +92,12 @@ class TestCompares:
         assert type(m1) is Unit
         assert type(m2) is not Unit
         assert type(m2) is pint.Unit
+        assert m1 == m2
+        assert m2 == m1
+
+    def test_eq_cfunit(self):
+        m1 = Unit("m")
+        m2 = CFU_Unit("m")
         assert m1 == m2
         assert m2 == m1
 

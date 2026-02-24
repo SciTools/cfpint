@@ -62,13 +62,18 @@ class Unit(pint.Unit):
         """Support comparison between Units and strings.
 
         Pint Units do not support this, but cf_units did.
+
+        Also support comparison with other unit-like objects
+        -- specifically, regular pint.Unit and cf_units.Unit --
+        using string conversion.
         """
         if not isinstance(other, pint.Unit):
-            other = Unit(other)
+            # Use the string conversion of whatever it is to create a pint unit.
+            other = Unit(str(other))
         # plain string comparison works, because Pint does *not* "store" the original
         #  definition string (unlike udunits / cf_units).
-        result = str(self) == str(other)
-        return result
+        # Therefore the printed form is "canonical" anyway.
+        return str(self) == str(other)
 
     def __str__(self):
         result = super(pint.Unit, self).__str__()
