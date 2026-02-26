@@ -37,6 +37,10 @@ class Unit(pint.Unit):
                 calendar_str = kwargs.pop("calendar", "standard")
                 # Replace args[0]
                 args = [base_unit] + list(args[1:])
+        # Discard any spurious extra 'calendar' kwarg
+        #   - e.g. allow "calendar=None" with non-date unit
+        kwargs.pop("calendar", None)
+        # call the parent pint.Unit init.
         super().__init__(*args, **kwargs)
         if self.dimensionality.get("[time]" != 1):
             msg = (
@@ -96,7 +100,7 @@ class Unit(pint.Unit):
             assert result.endswith(postfix)
             result = prefix + str(self)
             # Temporarily, here but NOT in the repr (for cf-units compatibility = YUCK!)
-            if self.calendar_string not in (None, "default"):
+            if self.calendar_string not in (None, "standard", "default"):
                 # Note the handling of the "'"s
                 result += f"', calendar='{self.calendar_string!s}"
             result += postfix

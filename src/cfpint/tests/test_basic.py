@@ -109,7 +109,7 @@ class TestDates:
         date_unit = Unit("days since 1970-01-01", **kwargs)
         assert (date_unit * 1).units == "days"
         assert date_unit.startdate_string == "1970-01-01"
-        expect_calendar = calendar
+        expect_calendar = "standard" if calendar is None else calendar
         assert date_unit.calendar_string == expect_calendar
 
     @pytest.mark.parametrize("unitstr", ["m", "days", "hours since 1970"])
@@ -137,8 +137,8 @@ class TestDates:
         date_unit = Unit("day since 1970", **kwargs)
         # TODO: fix this (d//days), but for now it is done in Iris ???
         expect = "d since 1970"
-        if calendar == "365_day":
-            expect += ", calendar='365_day'"
+        if calendar == "365_day" and method != "str":
+            expect += "', calendar='365_day"
         if method == "str":
             result = str(date_unit)
         else:
