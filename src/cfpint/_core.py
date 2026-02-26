@@ -34,7 +34,7 @@ class Unit(pint.Unit):
                 #  N.B. cf_units (1) checks against a list of valid names, and (2)
                 #  normalises through a mapping of aliases.
                 # TODO: add minimal checking of date+calendar, like cf_units or better
-                calendar_str = kwargs.pop("calendar", "default")
+                calendar_str = kwargs.pop("calendar", "standard")
                 # Replace args[0]
                 args = [base_unit] + list(args[1:])
         super().__init__(*args, **kwargs)
@@ -67,20 +67,25 @@ class Unit(pint.Unit):
         -- specifically, regular pint.Unit and cf_units.Unit --
         using string conversion.
         """
-        if not isinstance(other, pint.Unit):
+        if not isinstance(other, self.__class__):
             # Use the string conversion of whatever it is to create a pint unit.
-            other = Unit(str(other))
+            # NOTE: forcing to own class enables derived subclasses to work the same.
+            other = self.__class__(str(other))
         # plain string comparison works, because Pint does *not* "store" the original
         #  definition string (unlike udunits / cf_units).
         # Therefore the printed form is "canonical" anyway.
+        # TODO: fix this to be calendar aware
+        #  - it's awkward because cf_units str() doesn't include calendar
+        #  - so, for now, neither does the iris CfpintUnit
         return str(self) == str(other)
 
     def __str__(self):
         result = super(pint.Unit, self).__str__()
         if self.startdate_string is not None:
             result += self._DATEUNITS_SIGNATURE + self.startdate_string
-            if self.calendar_string not in (None, "default"):
-                result += f", calendar='{self.calendar_string!s}'"
+            # TODO: we really ought to have this, but see temporary test_pintunit
+            # if self.calendar_string not in (None, "default"):
+            #     result += f", calendar='{self.calendar_string!s}'"
         return result
 
     def __repr__(self):
@@ -89,7 +94,12 @@ class Unit(pint.Unit):
             prefix, postfix = "<Unit('", "')>"
             assert result.startswith(prefix)
             assert result.endswith(postfix)
-            result = prefix + str(self) + postfix
+            result = prefix + str(self)
+            # Temporarily, here but NOT in the repr (for cf-units compatibility = YUCK!)
+            if self.calendar_string not in (None, "default"):
+                # Note the handling of the "'"s
+                result += f"', calendar='{self.calendar_string!s}"
+            result += postfix
         return result
 
 

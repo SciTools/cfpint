@@ -109,7 +109,7 @@ class TestDates:
         date_unit = Unit("days since 1970-01-01", **kwargs)
         assert (date_unit * 1).units == "days"
         assert date_unit.startdate_string == "1970-01-01"
-        expect_calendar = "default" if calendar is None else calendar
+        expect_calendar = calendar
         assert date_unit.calendar_string == expect_calendar
 
     @pytest.mark.parametrize("unitstr", ["m", "days", "hours since 1970"])
