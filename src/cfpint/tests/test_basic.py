@@ -1,14 +1,9 @@
+import cftime
 import pint
 import pytest
 from cf_units import Unit as CFU_Unit
 
-# from cfpint import install_defaults
 from cfpint import Unit
-
-# TODO: want to know why this didn't work
-# @pytest.fixture(scope="session")
-# def install():
-#     install_defaults()
 
 
 class TestBasicCflike:
@@ -136,7 +131,7 @@ class TestDates:
         kwargs = {} if calendar is None else {"calendar": calendar}
         date_unit = Unit("day since 1970", **kwargs)
         # TODO: fix this (d//days), but for now it is done in Iris ???
-        expect = "d since 1970"
+        expect = "days since 1970"
         if calendar == "365_day" and method != "str":
             expect += "', calendar='365_day"
         if method == "str":
@@ -145,3 +140,66 @@ class TestDates:
             expect = f"<Unit('{expect}')>"
             result = repr(date_unit)
         assert result == expect
+
+
+# Period symbols and their name expansions:  N.B. minutes are "min" not "m"
+_TIME_SYMBOLS_NAMES = {"d": "days", "h": "hours", "min": "minutes", "s": "seconds"}
+
+
+class TestTimeunitStrings:
+    """Check the special handling of times and dates by Unit.str().
+
+    Ensures that strings of date units use cftime-compatible period names,
+    and that time-period units look the same way (for consistency).
+    """
+
+    @pytest.fixture(params=list(_TIME_SYMBOLS_NAMES))
+    def period_symbol(self, request):
+        return request.param
+
+    def test_timeperiod_strs(self, period_symbol):
+        # Test that time-period names appear in time-period unit strings.
+        # Create a unit based on the pint symbol for d/h/m/s
+        unit_str = period_symbol
+        unit = Unit(unit_str)
+
+        # in all cases should have dimensions [time], and *not* be a "date"
+        assert unit.dimensionality == {"[time]": 1}
+        assert not unit.is_datelike()
+
+        # Test that str() replaces the symbol with the name.
+        result = str(unit)
+        expected = _TIME_SYMBOLS_NAMES[period_symbol]
+        assert result == expected
+
+    def test_dateunit_conversion(self, period_symbol):
+        # Test that time-period names appear in date unit strings.
+        # Create a unit based on the pint symbol for d/h/m/s
+        unit_str = period_symbol + " since 2000-01-01"
+
+        # construct the unit
+        unit = Unit(unit_str)
+
+        # in all cases should have dimensions [time], and be a "date"
+        # TODO: one day, 'date' may be coded as a separate *dimension* ?
+        assert unit.dimensionality == {"[time]": 1}
+        assert unit.is_datelike()
+
+        # Test the expected string repr
+        result = str(unit)
+        # Expected content has a standardised name in place of the symbol.
+        expected = _TIME_SYMBOLS_NAMES[period_symbol] + " since 2000-01-01"
+        assert result == expected
+
+    def test_dateunit_cftime_compatible(self, period_symbol):
+        # Check that date unit strings are valid cftime units.
+
+        # Create a unit based on the pint symbol for d/h/m/s
+        unit_in = period_symbol + " since 2000-01-01"
+
+        # convert to a unit string
+        unit_out = str(Unit(unit_in))
+
+        # Check that the date unit is compatible with cftime
+        date = cftime.num2date(0.0, str(unit_out))
+        assert date == cftime.datetime(2000, 1, 1)

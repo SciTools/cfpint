@@ -90,6 +90,16 @@ class Unit(pint.Unit):
             # TODO: we really ought to have this, but see temporary test_pintunit
             # if self.calendar_string not in (None, "default"):
             #     result += f", calendar='{self.calendar_string!s}'"
+        if self.dimensionality == {"[time]": 1}:
+            # Date or time units *only* : replace time unit symbols with full names.
+            # Required for cftime compatibility of date units:  Do the same to time
+            # (period) units also, for consistency.
+            sym_names = {"d": "days", "h": "hours", "min": "minutes", "s": "seconds"}
+            for sym, name in sym_names.items():
+                if result == sym:
+                    result = name
+                elif result.startswith(sym + " "):
+                    result = result.replace(sym + " ", name + " ", 1)
         return result
 
     def __repr__(self):
