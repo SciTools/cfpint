@@ -14,11 +14,12 @@ authors = [
     {name = "cfpint Contributors", email = "scitools.pub@gmail.com"},
 ]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
-    "Operating System :: THIS VARIES BY REPOSITORY",
+    "Operating System :: MacOS :: MacOS X",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
@@ -31,14 +32,16 @@ dynamic = [
     "readme",
     "version",
 ]
-description = "<PACKAGE_DESCRIPTION>" # e.g. Iris: A powerful, format-agnostic, community-driven Python package for analysing and visualising Earth science data
+description = "CF compatible extensions for pint units"
 keywords = [
-    "<PACKAGE_KEYWORDS>",
+    "cf-metadata",
+    "data-analysis",
+    "pint",
 ]
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 name = "scitools-cfpint"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 [project.urls]
 Code = "https://github.com/SciTools/cfpint"
@@ -46,8 +49,7 @@ Discussions = "https://github.com/SciTools/cfpint/discussions"
 Issues = "https://github.com/SciTools/<PACKAGE_NAME>/issues"
 
 [tool.check-manifest]
-# Ignores here will vary by repository.
-ignore = ["src/cfpint/_version.py"] # e.g "lib/iris" or "cf-units"
+ignore = ["src/cfpint/_version.py"]
 
 [tool.codespell]
 ignore-words-list = "alpha-numeric,assertIn,degreee,discontiguities,lazyness,meaned,nin,re-use,re-uses,re-using,re-used,anc,abl,ND,Nd" # This is the full list of words that we ignore in all repositories.
@@ -62,15 +64,15 @@ exclude_lines = [
 [tool.coverage.run]
 branch = true
 include = [
-    "src/cfpint/*", # e.g "cf_units/*" or "lib/iris/*"
+    "src/cfpint/*",
 ]
 omit = [
-    "src/cfpint/tests/*", # e.g "cf_units/tests/*" or "lib/iris/tests/*"
+    "src/cfpint/tests/*",
 ]
 
 [tool.mypy]
 # https://mypy.readthedocs.io/en/stable/error_code_list2.html
-disable_error_code = [] # Include any error codes that you want to ignore
+disable_error_code = []
 enable_error_code = [
     "ignore-without-code",
     "redundant-expr",
@@ -80,8 +82,6 @@ strict = true
 warn_unreachable = true
 
 [tool.numpydoc_validation]
-# We have agreed a that some of the numpydoc rules that we are going to ignore.
-# Our repositories are going to have extra rules that they are ignoring that is expected, but they are not included here.
 # https://numpydoc.readthedocs.io/en/latest/validation.html#validation-checks
 checks = [
     "all",  # Enable all numpydoc validation rules, apart from the following:
@@ -124,13 +124,12 @@ exclude = [
     '\.__repr__$',
 ]
 
-[tool.pytest.ini_options] # The list of keys vary by repository
-addopts = ["-ra", "-v", "--strict-config", "--strict-markers", "--doctest-modules"] # This addopts list varies by repository
-testpaths = "src/cfpint>" # e.g "cf_units" or "lib/iris"
+[tool.pytest.ini_options]
+addopts = ["-ra", "-v", "--strict-config", "--strict-markers", "--doctest-modules"]
+testpaths = "src/cfpint>"
 log_level = "INFO"
 
 [tool.repo-review]
-# A list of the currently failing repo-review checks, to be fixed later, different for every repository.
 ignore = [
     # https://learn.scientific-python.org/development/guides/style/#PC180
     # Not possible to run on the hardware used by the majority of our developers. Might change in future!
@@ -146,7 +145,6 @@ line-length = 88
 preview = false
 
 [tool.ruff.lint]
-# We have agreed that we will permanently ignore the ruff rules in this ignore list.
 ignore = [
     # NOTE: Non-permanent exclusions should be added to the ".ruff.toml" file.
 
@@ -177,7 +175,7 @@ max-complexity = 22
 
 [tool.ruff.lint.per-file-ignores]
 # All test scripts
-"src/cfpint/tests/*.py" = [ # e.g "cf_units/tests" or "lib/iris/tests"
+"src/cfpint/tests/*.py" = [
     # https://docs.astral.sh/ruff/rules
     "D100",  # Missing docstring in public module
     "D205",  # 1 blank line required between summary line and description
@@ -191,14 +189,14 @@ convention = "numpy"
 zip-safe = false
 
 [tool.setuptools.dynamic]
-dependencies = {file = "requirements/cfpint-requirements.txt"} # e.g requirements/pypi-core.txt
+dependencies = {file = "requirements/cfpint-requirements.txt"}
 readme = {file = "README.md", content-type = "text/markdown"}
 
 [tool.setuptools.packages.find]
-include = ["cfpint"] # e.g. "cf_units" or "iris"
-where = ["src"] # e.g. "lib" (not needed for 'root repos' like cf-units)
+include = ["cfpint"]
+where = ["src"]
 
 [tool.setuptools_scm]
 local_scheme = "dirty-tag"
 # https://setuptools-scm.readthedocs.io/en/latest/extending/#version-number-construction
-write_to = "src/cfpint/_version.py" # e.g "lib/iris" or "cf-units"
+write_to = "src/cfpint/_version.py"
