@@ -1,4 +1,4 @@
-name: ncta-dev
+name: cfpint-dev
 
 channels:
   - conda-forge
