@@ -61,7 +61,7 @@ jobs:
           channels: conda-forge
           channel-priority: true
           auto-update-conda: true
-          environment-file: "requirements/locks/py${{ matrix.python-version }}-linux-64.lock"
+          environment-file: "requirements/cfpint-requirements.txt"
           activate-environment: ${{ env.ENV_NAME }}
 
       - name: "tests (py${{ matrix.python-version }})"
