@@ -53,7 +53,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "mambaforge setup (python ${{ matrix.python-version }})"
+      - name: "miniforge setup (python ${{ matrix.python-version }})"
         uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-variant: Miniforge3
